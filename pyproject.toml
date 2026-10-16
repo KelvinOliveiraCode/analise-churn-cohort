@@ -1,0 +1,21 @@
+[project]
+name = "analise-churn-cohort"
+version = "0.1.0"
+description = "Analise de churn e coorte de retencao (PT-BR/EN)"
+requires-python = ">=3.10"
+dependencies = [
+    "pandas>=2.0",
+    "matplotlib>=3.7",
+    "pytest>=9.1.1",
+]
+
+[project.scripts]
+analise-churn-cohort = "analise_churn_cohort.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
