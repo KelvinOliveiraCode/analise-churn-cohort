@@ -1,118 +1,94 @@
 # analise-churn-cohort
 
-<div align="center">
-
 **English** · [Português (Brasil)](README.md)
 
-</div>
-
-[![Python 3](https://img.shields.io/badge/Python-3.x-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/) [![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?style=flat-square&logo=scikit-learn)](https://scikit-learn.org/) [![pandas](https://img.shields.io/badge/pandas-150458?style=flat-square&logo=pandas)](https://pandas.pydata.org/) [![pytest](https://img.shields.io/badge/pytest-0A9EDC?style=flat-square&logo=pytest)](https://docs.pytest.org/) [![MIT License](https://img.shields.io/badge/License-MIT-f4c430?style=flat-square)](LICENSE)
-
-### Projeto funcional ,  analise-churn-cohort
-
----
+[![Python 3](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white)](#) [![pandas](https://img.shields.io/badge/pandas-150458?style=flat-square&logo=pandas)](#) [![matplotlib](https://img.shields.io/badge/matplotlib-11557C?style=flat-square&logo=python)](#) [![pytest](https://img.shields.io/badge/pytest-11%20tests-0A9EDC?style=flat-square&logo=pytest)](#) [![MIT License](https://img.shields.io/badge/License-MIT-f4c430?style=flat-square)](LICENSE)
 
 ## What it is
 
-Projeto funcional ,  analise-churn-cohort
+**Churn analysis with retention cohorts**: it generates synthetic data (users + purchases, fixed seed), computes **per-cohort retention** (period × cohort) and plots the **churn curve** (matplotlib). It is an educational data-analysis lab for understanding customer retention.
 
----
+## Status
 
-## Quick Start
+An educational analysis lab, working and tested (11 tests).
 
-```bash
-# Clone and enter
-git clone https://github.com/KelvinOliveiraCode/<repo>.git
-cd <repo>
+## Features
 
-# Install dependencies
-# No requirements.txt detected
+- **Deterministic synthetic data** (`generate_synthetic_data`, fixed seed 42).
+- **Per-cohort retention** (`compute_cohort_retention`): a cohort × period matrix.
+- **Churn curve** (`plot_churn_curve`): saves a PNG with the retention trend.
+- **CLI** `analise-churn-cohort`: `--n-users` (1000), `--n-purchases` (5000), `--output-dir`, `--seed` (42).
 
-# Run the project
-python main.py
+## Architecture
 
-# Run tests
-pytest
+An `analise_churn_cohort` package with `cohort.py` (calculation/plotting), `cli.py` (interface) and `__main__.py`. Synthetic data → retention → PNG.
+
+```mermaid
+flowchart LR
+    GEN[generate_synthetic_data - seed 42] --> RET[compute_cohort_retention]
+    RET --> PLOT[plot_churn_curve - PNG]
+    CLI[analise-churn-cohort] --> GEN
 ```
 
-## How it works
+## Stack
 
-Estrutura limpa e modular com separação de responsabilidades.
+- Python ≥ 3.10
+- pandas ≥ 2.0, matplotlib ≥ 3.7
+- pytest ≥ 9.1 (dev)
 
----
+## Repository layout
 
-## Capabilities
+```
+analise-churn-cohort/
+├── pyproject.toml · BRIEF.md
+├── src/analise_churn_cohort/
+│   ├── cohort.py       # per-cohort retention + churn curve
+│   ├── cli.py          # CLI
+│   └── __main__.py
+├── tests/              # 11 tests
+└── LICENSE             # MIT
+```
 
-| Capacidade | Descrição |
-|------------|-------------|
-| Carregamento de Dados | Auto-download do TensorFlow creditcard.csv (284k transações) com cache local |
-| EDA e Visualização | Distribuição de classes, histogramas de Amount, heatmaps de correlação (matplotlib/seaborn) |
-| Pré-processamento | RobustScaler em Amount/Time, split estratificado, remoção de duplicatas |
-| Balanceamento | SMOTE oversampling (fallback: class_weight="balanced") |
-| Modelagem | LogisticRegression, RandomForest, ExtraTrees com RandomizedSearchCV (StratifiedKFold) |
-| Métricas | Accuracy, Precision, Recall, F1, ROC AUC, Specificity, Confusion Matrix |
-| Seleção | Score ponderado: Recall 40% + F1 30% + Precision 20% + Accuracy 10% |
-| Persistência | Serialização joblib para modelo, scaler e resultados completos |
+## Prerequisites and installation
 
+Python ≥ 3.10.
 
----
+```bash
+pip install -e .
+```
 
+## How to run
 
+```bash
+analise-churn-cohort --n-users 1000 --output-dir saida
+# generates synthetic data, computes cohort retention and saves saida/churn_curve.png
+```
 
----
+## Tests and quality
 
-## FAQ
+Real command (verified by the agent):
 
-<details>
-<summary><strong>What is this project?</strong></summary>
+```bash
+PYTHONPATH=src python -m pytest tests/
+# 11 passed
+```
 
-A Python study/project demonstrating core concepts.
+## Technical decisions and trade-offs
 
-</details>
+- **Synthetic data with a fixed seed**: reproducible and free of real data; in exchange, it does not reflect a real base.
+- **Cohort as a method**: a market-standard way to visualize retention; the analysis depends on data quality.
 
-<details>
-<summary><strong>How do I run it?</strong></summary>
+## Known limitations and roadmap
 
-See [Quick Start](#quick-start) for copy-paste commands.
+- Synthetic data — not an analysis of a real customer base.
+- Output as a PNG chart only; no interactive table.
 
-</details>
+## Development process
 
-<details>
-<summary><strong>Are there tests?</strong></summary>
+An individual project by Kelvin Oliveira, built with orchestrated AI agents and reviewed by the author. The cohort method and the review are the author's.
 
-No automated tests in this repository.
+## License and author
 
-</details>
+MIT — Copyright (c) 2026 Kelvin Rebelo de Oliveira.
 
-<details>
-<summary><strong>Can I use this in production?</strong></summary>
-
-This is a **study/portfolio project**. Review and harden (auth, persistence, monitoring, etc.) before production use.
-
-</details>
-
-
-
----
-
-## Documentation
-
-- **Source Code** ,  Browse the `src/` directory for implementation details
-- **API Reference** ,  Inline docstrings + type hints
-- **Architecture Diagram** ,  See [architecture.mermaid](docs/architecture.mermaid) (if present)
-- **Changelog** ,  [CHANGELOG.md](CHANGELOG.md) (if present)
-- **Contributing** ,  [CONTRIBUTING.md](CONTRIBUTING.md) (if present)
-
-## License
-
-[MIT](LICENSE) ,  Kelvin Oliveira
-
----
-
-<div align="center">
-
-**Built with** · Python 3 + scikit-learn + pandas
-
-**Author** · [Kelvin Oliveira](https://github.com/KelvinOliveiraCode) · [Portfolio](https://kelvinoliveiracode.github.io/portfolio/)
-
-</div>
+**Author**: [Kelvin Oliveira](https://github.com/KelvinOliveiraCode) · [Portfolio](https://kelvinoliveiracode.github.io/portfolio/)
